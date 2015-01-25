@@ -2,7 +2,7 @@
     File name: control.py
     Author: xdtianyu@gmail.com
     Date created: 2015-01-25 09:56:46
-    Date last modified: 2015-01-25 12:52:23
+    Date last modified: 2015-01-25 16:54:10
     Python Version: 2.7.3
 '''
 
@@ -50,6 +50,7 @@ def show_control():
             left:0;
             width:100%;
             text-align:center;
+            color:black;
             z-index:2;
         }
     </style>
@@ -66,14 +67,14 @@ def show_control():
   <br/>
   <h2>Limit Speed</h2>
     <div id="limit" class="switch" data-on="success" data-off="warning">
-        <input type="checkbox" checked"/>
+        <input type="checkbox" '''+switch+'''/>
     </div>
 </div>
 <script>
 $('#limit').on('switch-change', function (e, data) {
     var $el = $(data.el)
       , value = data.value;
-    console.log(e, $el, value);
+    $.post("control", {limit: value});
 });
 </script>
 
@@ -82,13 +83,18 @@ $('#limit').on('switch-change', function (e, data) {
 '''
 
 def post(request):
-    global status
+    global status_file
     
-    if status:
-        status = False
+    limit = request.form['limit']
+    
+    subprocess.Popen(['/root/bin/toggle.sh', limit])
+    if os.path.isfile(status_file):
+        if limit == 'false':
+            os.remove(status_file)
     else:
-        status = True
-    return "post"
+        if limit == 'true':
+            open(status_file, 'w').close()
+    return ""
 
 def speed():
     s = subprocess.Popen(['/root/bin/speed.sh'], stdout=subprocess.PIPE)
