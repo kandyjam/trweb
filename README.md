@@ -13,7 +13,7 @@ This is created for guests and they can quickly toggle download limit.
 
 3\. Run python server.py and check if everything is OK, you may need supervisor  or screen for running in backgroud.
 
-4\. Use your desktop/phone's browser access http://<server ip>:<port> to see if everything is ok. There are only a process bar with speed(div auto refrushed) and a switch button for limiting speed. :)
+4\. Use your desktop/phone's browser access http://\<server ip\>:\<port\> to see if everything is ok. There are only a process bar with speed(div auto refrushed) and a switch button for limiting speed. :)
 
 ## Dependence
 
