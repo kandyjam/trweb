@@ -7,15 +7,21 @@
 '''
 
 import subprocess
+import os
 
-status=False
+status_file="/tmp/tr_as_status"
 
 def show_control():
+    global status_file
     s = speed()
     max_speed = 1024.0
     if float(s) > max_speed:
         s = str(max_speed)
     per = float(s)/max_speed*100
+    if os.path.isfile(status_file):
+        switch = "checked"
+    else:
+        switch = "unchecked"
     return '''
 <!DOCTYPE html>
 <html lang="en">
@@ -24,8 +30,10 @@ def show_control():
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="static/css/bootstrap.min.css">
+  <link rel="stylesheet" href="static/css/bootstrapSwitch.css">
   <script src="static/js/jquery.min.js"></script>
   <script src="static/js/bootstrap.min.js"></script>
+  <script src="static/js/bootstrapSwitch.js"></script>
     <script>
         $(document).ready(function() {
             setInterval(function() {
@@ -55,7 +63,19 @@ def show_control():
       <span>'''+s+'''KB/s</span>
     </div>
   </div>
+  <br/>
+  <h2>Limit Speed</h2>
+    <div id="limit" class="switch" data-on="success" data-off="warning">
+        <input type="checkbox" checked"/>
+    </div>
 </div>
+<script>
+$('#limit').on('switch-change', function (e, data) {
+    var $el = $(data.el)
+      , value = data.value;
+    console.log(e, $el, value);
+});
+</script>
 
 </body>
 </html>
@@ -74,3 +94,6 @@ def speed():
     s = subprocess.Popen(['/root/bin/speed.sh'], stdout=subprocess.PIPE)
     out,error = s.communicate()
     return out
+
+def switch():
+    pass
